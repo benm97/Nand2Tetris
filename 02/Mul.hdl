@@ -1,0 +1,53 @@
+CHIP Mul{
+    IN a[16], b[16];
+    OUT out[16];
+
+    PARTS:
+	Mux16(a=false, b=a, sel=b[0], out=line1);
+   	ShiftLeft(in=a, out=shifted1);
+   	Mux16(a=false, b= shifted1, sel=b[1], out=line2);
+  	ShiftLeft(in=shifted1, out=shifted2);
+   	Mux16(a=false, b= shifted2, sel=b[2], out=line3);
+	ShiftLeft(in=shifted2, out=shifted3);
+   	Mux16(a=false, b= shifted3, sel=b[3], out=line4);
+   	ShiftLeft(in=shifted3, out=shifted4);
+   	Mux16(a=false, b= shifted4, sel=b[4], out=line5);
+   	ShiftLeft(in=shifted4, out=shifted5);
+    	Mux16(a=false, b= shifted5, sel=b[5], out=line6);
+    	ShiftLeft(in=shifted5, out=shifted6);
+    	Mux16(a=false, b= shifted6, sel=b[6], out=line7);
+    	ShiftLeft(in=shifted6, out=shifted7);
+    	Mux16(a=false, b= shifted7, sel=b[7], out=line8);
+    	ShiftLeft(in=shifted7, out=shifted8);
+    	Mux16(a=false, b= shifted8, sel=b[8], out=line9);
+    	ShiftLeft(in=shifted8, out=shifted9);
+    	Mux16(a=false, b= shifted9, sel=b[9], out=line10);
+    	ShiftLeft(in=shifted9, out=shifted10);
+    	Mux16(a=false, b= shifted10, sel=b[10], out=line11);
+    	ShiftLeft(in=shifted10, out=shifted11);
+    	Mux16(a=false, b= shifted11, sel=b[11], out=line12);
+    	ShiftLeft(in=shifted11, out=shifted12);
+    	Mux16(a=false, b= shifted12, sel=b[12], out=line13);
+    	ShiftLeft(in=shifted12, out=shifted13);
+    	Mux16(a=false, b= shifted13, sel=b[13], out=line14);
+    	ShiftLeft(in=shifted13, out=shifted14);
+    	Mux16(a=false, b= shifted14, sel=b[14], out=line15);
+
+    	ShiftLeft(in=shifted14, out=shifted15);
+    	Mux16(a=false, b= shifted15, sel=b[15], out=line16);
+	Add16(a=line1, b=line2, out=lineOut1);
+	Add16(a=lineOut1, b=line3, out=lineOut2);
+	Add16(a=lineOut2, b=line4, out=lineOut3);
+	Add16(a=lineOut3, b=line5, out=lineOut4);
+	Add16(a=lineOut4, b=line6, out=lineOut5);
+	Add16(a=lineOut5, b=line7, out=lineOut6);
+	Add16(a=lineOut6, b=line8, out=lineOut7);
+	Add16(a=lineOut7, b=line9, out=lineOut8);
+	Add16(a=lineOut8, b=line10, out=lineOut9);
+	Add16(a=lineOut9, b=line11, out=lineOut10);
+	Add16(a=lineOut10, b=line12, out=lineOut11);
+	Add16(a=lineOut11, b=line13, out=lineOut12);
+	Add16(a=lineOut12, b=line14, out=lineOut13);
+	Add16(a=lineOut13, b=line15, out=out);
+
+}

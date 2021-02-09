@@ -1,0 +1,59 @@
+/**
+* This chip is an extension of the book CPU by using the extended ALU.
+* More specificly if instruction[15]==0 or (instruction[14] and instruction[13] equals 1)
+* the CpuMul behave exactly as the book CPU.
+* While if it is C instruction and instruction[13] == 0 the output will be D*A/M 
+* (according to instruction[12]).
+* Moreover, if it is c instruction and instruction[14] == 0 it will behave as follows:
+*
+* instruction:  | 12 | 11 | 10 |
+* _____________________________
+* shift left D  | 0  | 1  | 1  |
+* shift left A  | 0  | 1  | 0  |
+* shift left M  | 1  | 1  | 0  |
+* shift right D | 0  | 0  | 1  |
+* shift right A | 0  | 0  | 0  |
+* shift right M | 1  | 0  | 0  |
+**/
+
+CHIP CpuMul{
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset=1) or continue executing
+                         // the current program (reset=0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write into M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+     PARTS:
+    Mux16(b=address1,a=instruction,sel=instruction[15],out=outmux1);
+    Not(in=instruction[15],out=isAddress);
+    Or(a=isAddress,b=instruction[5],out=loada);
+    ARegister(in=outmux1,load=loada,out=outaregister1,out=outaregister2,out[0..14]=addressM);
+    And(a=instruction[15],b=instruction[12],out=selmux2);
+    Mux16(a=outaregister1,b=inM,sel=selmux2,out=outmux2);
+
+    And(a=instruction[13],b=instruction[14],out=isNormal);
+    Or(a=isNormal,b=isAddress,out=inst8);
+    Mux(a=true,b=instruction[13],sel=instruction[15],out=inst7);
+    ExtendAlu(x=x,y=outmux2,instruction[6]=false,instruction[7]=inst7,instruction[8]=inst8,
+instruction[0..5]=instruction[6..11],zr=zr,ng=ng,out=outM,out=address1,out=outalu);
+
+    And(a=instruction[15],b=instruction[4],out=loadd);
+    DRegister(in=outalu,load=loadd,out=x);
+    And(a=instruction[3],b=instruction[15],out=writeM);
+    Not(in=zr,out=notzr);
+    Not(in=ng,out=notng);
+    And(a=notzr,b=notng,out=pos);
+    And(a=pos,b=instruction[0],out=JGT);
+    And(a=zr,b=instruction[1],out=JEQ);
+    And(a=ng,b=instruction[2],out=JLT);
+    Or(a=JGT,b=JEQ,out=JGE);
+    Or(a=JGE,b=JLT,out=tmpload);
+    And(a=instruction[15],b=tmpload,out=load);
+    PC(in=outaregister2,reset=reset,inc=true,load=load,out[0..14]=pc);
+}
