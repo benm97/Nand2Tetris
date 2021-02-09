@@ -1,0 +1,19 @@
+benm, rubensv	
+Benjamin Maman, maman.benjamin@gmail.com,341145811
+Rubens Valensi, rubensval25@gmail.com, 342414141
+
+
+=================================================
+=  README for ex4  =
+=================================================
+
+
+==================
+=  Description:  =
+==================
+README - This file.
+Mult.asm - multiplies R0*R1 and stores the results in R2.
+Fill.asm - fills the screen with black when key is pressed and white otherwise.
+Sort.asm - sorts array at R14 with length specified in R15.
+Divide.asm - divides R13 by R14 and stores the results in R15.
+
