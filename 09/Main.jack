@@ -1,0 +1,26 @@
+class Main {
+
+    function void main() {
+	/** The function who run the game */ //who run the world... girls!!
+	var SnakeGame myGame;
+	var boolean playAgain;
+	var char myChar;
+	let playAgain=true;
+	while(playAgain){
+		let myGame=SnakeGame.new();
+		do myGame.run();
+		do myGame.dispose();
+		do Output.moveCursor(14,8);
+		do Output.printString("Press enter to replay and other key to quit...");
+		do Sys.wait(1000);
+		let myChar=Keyboard.readChar();
+		if(myChar=String.newLine()){
+		    let playAgain=true;
+		} else{
+		    let playAgain=false;
+		}
+		do Screen.clearScreen();
+	}
+        return;
+    }
+}

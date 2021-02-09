@@ -1,0 +1,4 @@
+#!/bin/sh
+
+VMTRANSLATOR_FILE=$1
+python VMtranslator.py $VMTRANSLATOR_FILE

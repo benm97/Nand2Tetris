@@ -1,0 +1,35 @@
+class Random {
+
+    static int value;
+
+    function void setValue(int newValue) {
+	/**Set the value*/
+        let value = newValue;
+        return;
+    }
+
+    function int rand() {
+	/**Helper*/
+        let value = value + 20251;
+        if (value< 0) {
+            let value= value - 32767 - 1;
+        }
+        return value;
+    }
+
+    function int random(int range) {
+	/**Give a randomaly number*/
+        var int a;
+        var int b;
+        let a = 1;
+        while (a < range) {
+            let a = (a * 2) + 1;
+        }
+        let b = Random.rand() & a;
+        while (b > range) {
+            let b = Random.rand() & a;
+        }
+        return b;
+    }
+
+}

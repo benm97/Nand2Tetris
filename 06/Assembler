@@ -1,0 +1,4 @@
+#!/bin/sh
+
+ASSEMBLER_FILE=$1
+python Assembler.py $ASSEMBLER_FILE

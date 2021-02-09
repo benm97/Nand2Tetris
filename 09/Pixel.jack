@@ -1,0 +1,79 @@
+class Pixel{
+	field int x;
+	field int y;
+	static Pixel my_pixel;
+	constructor Pixel new(int my_x, int my_y){
+		/**Constructor of my class*/
+		let x=my_x;
+		let y=my_y;
+		return this;
+	}
+	method void draw(){
+	/**Draw a pixel */
+		do Screen.setColor(true);
+		do Screen.drawRectangle(x*15,y*15,(x+1)*15,(y+1)*15);
+		return;
+	}
+	method void erase(){
+		/**Set the pixel to white*/
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x*15,y*15,(x+1)*15,(y+1)*15);
+		return;
+	}
+	method void increaseX(){
+	/**Increase the x coordinate*/
+		let x=x+1;
+		return;
+	}
+	method void increaseY(){
+	/**Increase the y coordinate*/
+		let y=y+1;
+		return;
+	}
+	method void decreaseX(){
+	/**Decrease the x coordinate*/
+		let x=x-1;
+		return;
+	}
+	method void decreaseY(){
+	/**Decrease the y coordinate*/
+		let y=y-1;
+		return;
+	}
+	method int getX(){
+	/*Get the x*/
+		return x;
+	}
+	method int getY(){
+	/*Get the y coordinates*/
+		return y;
+	}
+	method void setX(int newx){
+	/*Set the x*/
+		let x=newx;
+		return;
+	}
+	method void setY(int newy){
+	/*Set the y*/
+		let y=newy;
+		return;
+	}
+	method void dispose() {
+	/**Dispose*/
+       		do Memory.deAlloc(this);
+        	return;
+        }
+	function void drawArray(Array toDraw,int len){
+	/**Draw the array*/ 
+		var int i;
+		
+		
+		let i=0;
+		while(i<len){
+			let my_pixel = toDraw[i];
+			do my_pixel.draw();
+			let i=i+1;
+		}
+	return;
+	}
+}

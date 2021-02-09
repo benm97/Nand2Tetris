@@ -1,0 +1,133 @@
+class Snake {
+
+    field int length;
+    field Array body;
+    field int size;
+    field int direction;
+    constructor Snake new() {
+	/**the constructor*/
+	var Pixel newPixel;
+    	let body = Array.new(476); //476 is the maximum size of the snake 
+	let size=4;
+	let direction=1;
+	let newPixel=Pixel.new(17,7);
+	let body[0]=newPixel;
+	let newPixel=Pixel.new(17,8);
+	let body[1]=newPixel;
+	let newPixel=Pixel.new(17,9);
+	let body[2]=newPixel;
+	let newPixel=Pixel.new(17,10);
+	let body[3]=newPixel;
+
+	return this;
+    }
+    method int getSize(){
+/**Get the size of the snake*/
+	return size;
+    }
+    method Array getBody(){
+/**Get the body array of the snake*/
+	return body;
+    }
+    method Array getDirection(){
+/**Get the direction of the snake*/
+	return direction;
+    }
+    method void setSize(int newSize){
+/**Set the size of the snake*/
+	let size=newSize;
+	return;
+    }
+    method void setPixel(Pixel newPixel){
+/**Add the pixel to the snake*/
+	let body[size]=newPixel;
+	let size=size+1;
+	return;
+    }
+    method void setDirection(int newDirection){
+/**Set the direction of the snake*/
+	let direction=newDirection;
+	return;
+    }
+    method void dispose() {
+/**Dispose*/
+	var int count;
+	var Pixel curr;
+	let count=0;
+	while(count<size){
+		let curr=body[count];
+		do curr.dispose();
+		let count=count+1;
+	}
+        do Memory.deAlloc(body);
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void moveUp(){
+/**Direction: Up*/
+	var Pixel my_pix;
+	let my_pix = body[0];
+	do my_pix.decreaseY();
+	return ; 
+    }
+    method void moveDown(){
+/**Direction: Down*/
+	var Pixel my_pix;
+	let my_pix = body[0];
+	do my_pix.increaseY();
+	return ; 
+    }
+    method void moveRight(){
+/**Direction: Right*/
+	var Pixel my_pix;
+	let my_pix = body[0];
+	do my_pix.increaseX();
+	return ; 
+    }
+    method void moveLeft(){
+/**Direction: Left*/
+	var Pixel my_pix;
+	let my_pix = body[0];
+	do my_pix.decreaseX();
+	return ; 
+    }
+
+    method void move () {
+/**Move the snake*/
+	var int count;
+	var Pixel current;
+	var Pixel next;
+	var Pixel last;
+	var Pixel lastCopy;
+    	
+	let last=body[size-1];
+	let lastCopy=Pixel.new(last.getX(),last.getY());
+	let count=size-1;
+	while(count>0){
+
+		let next=body[count-1];
+		let current=body[count];
+		do current.setX(next.getX());
+		do current.setY(next.getY());
+		let count=count-1;
+	}
+	if(direction=1){
+		do moveUp();
+	}
+    	if(direction=2){
+		do moveDown();
+	}
+    	if(direction=3){
+		do moveRight();
+	}
+    	if(direction=4){
+		do moveLeft();
+	}
+	do lastCopy.erase();
+
+	return;
+    }
+
+
+}

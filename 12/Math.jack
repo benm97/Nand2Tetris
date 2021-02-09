@@ -1,0 +1,130 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A library of commonly used mathematical functions.
+ * Note: Jack compilers implement multiplication and division using OS method calls.
+ */
+class Math {
+     static Array twoToThe;
+    /** Initializes the library. */
+    function void init() {
+	var int count;
+	var int number;
+	let twoToThe=Array.new(16);
+	let count=0;
+	let number=1;
+	while(count<16){
+		let twoToThe[count]	=number;
+		let number=number+number;
+		let count=count+1;
+	}
+	return;
+    }
+    function boolean bit(int x,int j){
+	return (x&twoToThe[j]);
+    }
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+	if(x<0){
+		return -x;
+	}else{
+		return x;
+	}
+    }
+
+
+    /** Returns the product of x and y. 
+     *  When a Jack compiler detects the multiplication operator '*' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x*y and multiply(x,y) return the same value.
+     */
+    function int multiply(int x, int y) {
+	var int sum, shiftedX,count,tmp;
+	let sum=0;
+	let count=0;
+		if (x < y) {
+			let tmp = x;
+			let x = y;
+			let y = tmp;
+		}
+	let shiftedX=x;
+	while(count<16){
+		if(Math.bit(y,count)){
+			let sum=sum+shiftedX;
+		}
+		let shiftedX=shiftedX+shiftedX;
+		let count=count+1;	
+	}
+	return sum;
+    }
+
+    /** Returns the integer part of x/y.
+     *  When a Jack compiler detects the multiplication operator '/' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x/y and divide(x,y) return the same value.
+     */
+    function int divide(int x, int y) {
+	var int ax,ay,sign;
+	let ax=Math.abs(x);
+	let ay=Math.abs(y);
+	if(((x>0)&(y>0))|((x<0)&(y<0))){
+		let sign=1;
+	}else{
+		let sign=-1;
+	}
+	return sign*Math.divideHelper(ax,ay);
+    }
+    function int divideHelper(int x, int y) {
+	var int q,qy;
+	if((y>x)|(y<0)){
+		return 0;
+	}
+	let q=Math.divideHelper(x,y+y);
+	let qy=Math.multiply(q,y);
+	if((x-(qy+qy))<y){
+		return q+q;
+	}else{
+		return q+q+1;
+	}
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+	var int y,counter,sum;
+	if(x<0){
+		return 0;
+	}
+	let y=0;
+	let counter=7;
+	while(counter>-1){
+		let sum=(y+twoToThe[counter])*(y+twoToThe[counter]);
+		if(((sum<x)|(sum=x))&(sum>0)){
+			let y=y+twoToThe[counter];
+		}
+		let counter=counter-1;
+	}
+	return y;
+	
+    }
+
+    /** Returns the greater number. */
+    function int max(int a, int b) {
+	if(a>b){
+		return a;
+	}else{
+		return b;
+	}
+    }
+
+    /** Returns the smaller number. */
+    function int min(int a, int b) {
+	if(a<b){
+		return a;
+	}else{
+		return b;
+	}
+    }
+}

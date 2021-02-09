@@ -1,0 +1,4 @@
+#!/bin/sh
+
+JA_FILE=$1
+python JackCompiler.py $JA_FILE

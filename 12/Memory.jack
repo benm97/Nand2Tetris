@@ -1,0 +1,106 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */ 
+class Memory {
+
+	static Array ram;
+	static int freeListStart, freeListEnd;
+
+    /** Initializes the class. */
+    function void init() {
+		let ram = 0;
+ 		let freeListStart = 2050;
+		let ram[freeListStart -1] = 14335;
+		let ram[freeListStart -2] = 0;
+		let freeListEnd = freeListStart;
+		return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+		return ram[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+		let ram[address] = value;
+		return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function int alloc(int size) {
+		var Array next, curr, tmp,arr;
+		var boolean end;
+		let end=true;
+		let curr = 0;
+		let next = ram[freeListStart];
+		let arr=0;
+		let next = freeListStart; 
+		if(size<0){
+			let end=false;
+			return 0;
+		}
+		while(next >0) //while we are in memory
+		{
+			if(((next[-1]-2-size) > 0)|((next[-1]-2-size) = 0))		
+			{
+				if(~((next[-1] - size - 2)=0))
+				{
+					let tmp = next + next[-1] - size;
+					let tmp[-1] = size;
+					let next[-1] = next[-1] - size - 2;
+					let tmp[-2] = 0;
+					
+					return tmp; 
+					
+				}
+				else {
+					if (~(curr=0)) {
+						let curr[-2] = next[-2];
+					}
+					let next[-2] = 0;
+					if(~(end)){
+						return -1;
+					}
+					return next;
+					
+				}
+			} 
+			let curr = next;
+			let next = next[-2]; 
+		}
+		return 0;
+		
+    }
+
+
+    function void deAlloc(Array o) {
+		var int curr, counter;
+		var boolean flag ;
+		let flag = true;
+		let counter =40;
+		let curr = freeListStart;
+		
+		while(ram[curr - 2] > 0)
+		{	
+			while(counter > 0 ){
+			let flag = false;
+			let counter = counter -1;
+			if(ram[curr - 2] >32){
+				let flag=true;
+			}
+		}
+			let curr = ram[curr - 2];
+		}	
+		let ram[curr - 2] = o;
+		return;
+	}    
+}

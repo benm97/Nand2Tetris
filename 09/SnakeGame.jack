@@ -1,0 +1,203 @@
+class SnakeGame {
+
+    field Snake snake;
+    field Array borders;
+    field Pixel toEat;
+    field int score;
+    field int lives;
+    constructor SnakeGame new() {
+	/**the constructor of my snake game*/
+	let lives=0;
+	let score=1;
+        let snake = Snake.new();
+	let borders = fillBorders();
+	do Pixel.drawArray(borders,102);
+	let toEat=Pixel.new(Random.random(29)+2,Random.random(12)+2);
+	return this;
+    }
+    method boolean collision(){
+	/**check if there was a collision*/
+	var int count;
+	var int moveCount;
+	var int direction;
+	var int countSnake;
+	var Array snakeBody;
+	var Pixel snakePixel;
+	var Pixel head; 
+	var Pixel bord; 
+	var Pixel newPixel;
+	let count=0;
+	let snakeBody=snake.getBody();
+	let head=snakeBody[0];
+	let direction=snake.getDirection();
+	let moveCount=snake.getSize();
+	while(count<102){
+		let bord=borders[count];
+		if((head.getX()=bord.getX()) &(head.getY()=bord.getY())){ //collision with borders
+			if(lives>0){// lost a life 
+				let lives=lives-1;
+		
+				//if there is collision and my snake has a life he's going to the opposite direction 
+				if(direction=1){
+					
+					do snake.setDirection(2);
+				}
+				else{
+					if(direction=2){
+						do snake.setDirection(1);
+					}
+				}
+				if(direction=3){
+					do snake.setDirection(4);
+				}
+				else{
+					if(direction=4){
+						do snake.setDirection(3);
+					}
+				}
+				while(moveCount>0)
+				{
+					do snake.move();
+					let moveCount=moveCount-1;
+				}
+				return true;
+			}
+			return false;
+		}
+		let count=count+1;
+	}
+	let countSnake=1;
+	while(countSnake<snake.getSize()){
+		let snakePixel=snakeBody[countSnake];
+		// collision with himself 
+		if((head.getX()=snakePixel.getX()) &(head.getY()=snakePixel.getY())){ 
+			if(lives>0){
+				let lives=lives-1;
+				return true;
+			}
+			return false;
+		}
+		let countSnake=countSnake+1;
+	}
+	
+	if((head.getX()=toEat.getX())&(head.getY()=toEat.getY())){//eat some food pixel
+		do toEat.erase();
+
+		let newPixel=Pixel.new(head.getX()-1,head.getY());
+		do snake.setPixel(newPixel);
+		do toEat.setX(Random.random(29)+2);
+		do toEat.setY(Random.random(12)+2);
+		let score=score +20;
+		if((((snake.getSize()-4)/5)*5)=(snake.getSize()-4)){
+			let lives=lives+1;
+		}
+		
+	}
+	return true;
+    }
+    method Array fillBorders(){
+	/**create the borders of my game*/
+        var int i;
+	var int j;
+	var int count;
+	var Pixel newPixel;
+	var Array bords;
+	let bords = Array.new(102);
+	let count=0;
+	let i=0;
+	let j=0;
+	/* we are going to print line by line 
+	all the borders */
+	while((j<16)|(j=16)){
+		
+		let newPixel=Pixel.new(i,j);
+		let bords[count]=newPixel;
+		let j=j+1;
+		let count=count+1;
+	}
+	let i=33;
+	let j=0;
+	while((j<16)|(j=16)){
+		let newPixel=Pixel.new(i,j);
+		let bords[count]=newPixel;
+		let j=j+1;
+		let count=count+1;
+	}
+	let i=0;
+	let j=0;
+	while((i<33)|(i=33)){
+		
+		let newPixel=Pixel.new(i,j);
+		let bords[count]=newPixel;
+		let i=i+1;
+		let count=count+1;
+	}
+	let i=0;
+	let j=16;
+	while((i<33)|(i=33)){
+		
+		let newPixel=Pixel.new(i,j);
+		let bords[count]=newPixel;
+		let i=i+1;
+		let count=count+1;
+	}		
+        return bords;
+    }
+    method void run(){
+	/** run the game */ 
+	var boolean play;
+	var char key;
+	var String msg1;
+	var String msg2;
+	var String msg3;
+	var int direction;
+	let play=true;
+
+	while(play){
+		let key=Keyboard.keyPressed();
+		let direction=snake.getDirection();
+		if ((key = 131)&(~(direction=2)))  { do snake.setDirection(1); }   // up arrow
+         	if ((key = 133)&(~(direction=1))) { do snake.setDirection(2);  }   // down arrow
+         	if ((key = 130)&(~(direction=3))) { do snake.setDirection(4);  }   // left arrow
+         	if ((key = 132)&(~(direction=4))) {do snake.setDirection(3); }   // right arrow
+		do Pixel.drawArray(borders,102);
+		do Pixel.drawArray(snake.getBody(),snake.getSize());
+		do toEat.draw();
+		do Output.moveCursor(2,4);
+		let msg1="You have ";
+		do Output.printString(msg1);
+		do msg1.dispose(); //dispose the string
+		do Output.printInt(lives);
+		let msg2 = " lives";
+		do Output.printString(msg2);
+		do msg2.dispose();
+		do snake.move();
+		let play=collision();
+		do Sys.wait(200);
+	}
+	do Screen.clearScreen(); // clear the screen for printing the message 
+	do Output.moveCursor(11,22);
+	let msg3 = "Your score is: ";
+	do Output.printString(msg3);
+	do msg3.dispose();
+	do Output.printInt(Math.max(score,snake.getSize()));
+	return;
+    }
+    method void dispose() {
+	/**Dispose the memory*/
+	var int countBorders;
+	var Pixel curr;
+	do snake.dispose();
+	let countBorders=0;
+	while(countBorders<102){
+		let curr=borders[countBorders];
+		do curr.dispose();
+		let countBorders=countBorders+1;
+	}
+        do Memory.deAlloc(borders);
+	do toEat.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+}
